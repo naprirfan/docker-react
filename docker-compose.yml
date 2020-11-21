@@ -1,0 +1,34 @@
+# Docker compose version, define what kind of structure we use in this file
+version: '3'
+# All services that runs in this app
+services:
+  # Arbitrary name. This could be app, www, or whatever
+  web:
+    # Keep it open after building the container. Kind of like -it flag on docker run
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    # Array of port mapping
+    ports:
+      - '3000:3000'
+    # Array of mounting volumes
+    volumes:
+      # Do not map node_modules inside /app folder inside alpine
+      - /app/node_modules
+      # Map everything from current folder into /app folder inside alpine
+      - .:/app
+  # Test service. solely for test purpose
+  tests:
+    # Keep it open after building the container. Kind of like -it flag on docker run
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    # Array of mounting volumes
+    volumes:
+      # Do not map node_modules inside /app folder inside alpine
+      - /app/node_modules
+      # Map everything from current folder into /app folder inside alpine
+      - .:/app
+    command: ['npm', 'run', 'test']
